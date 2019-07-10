@@ -2,7 +2,12 @@ var express = require('express');
 var app = express();
 var port = process.env.PORT || 8080;
 var morgan = require('morgan');
+var bodyParser = require('body-parser'); 
 var mongoose = require('mongoose');
+var User = require('./app/models/user');
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
 mongoose.connect('mongodb://localhost:27017/meanstackapp' ,{ useNewUrlParser: true }, (err)=>{
     if(err){
@@ -13,6 +18,18 @@ mongoose.connect('mongodb://localhost:27017/meanstackapp' ,{ useNewUrlParser: tr
 }}) 
 app.get('/', (req,res) => res.send('hello from the other side'))
 
+
+
+// http://localhost:8080/users
+app.post('/users',(req,res)=>{
+    var user = new User();
+    user.username = req.body.username;
+    user.password = req.body.password;
+    user.email = req.body.email;
+    user.save();
+    res.send("user created");
+})
+
 app.listen(port || 8080, (req,res)=>
-    console.log("listening on port" + port)
+    console.log("listening on port " + port)
 );
