@@ -1,13 +1,14 @@
 var mongoose = require('mongoose');
   var Schema = mongoose.Schema;
   var bcrypt = require('bcrypt')
+  const saltRounds = 10;
 
   var UserSchema = new Schema({
       username: {
           type: String,
           lowercase: true,
-          required: true,
-          unique: true
+          unique: true,
+          required: true
       },
       password: {
           type: String, 
@@ -16,18 +17,18 @@ var mongoose = require('mongoose');
       email: {
           type: String,
           required: true,
-          lowercase: true,
-          unique: true
+          unique: true,
+          lowercase: true
       }
   }); 
 
     UserSchema.pre('save',function(next){
         var user = this;
-        bcrypt.hash(user.password,null,null,function(err,hash){
+        bcrypt.hash(user.password,saltRounds,function(err,hash){
             if(err) return next(err);
             user.password = hash;
             next();
         });
     });
 
-  module.exports = mongoose.model('User', UserSchema)
+  module.exports = mongoose.model('User', UserSchema);
