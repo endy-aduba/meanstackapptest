@@ -11,11 +11,12 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 mongoose.connect('mongodb://localhost:27017/meanstackapp' ,{ useNewUrlParser: true }, (err)=>{
     if(err){
-        console.log("not connected to database");
+        console.log("not connected to database " + err);
     }
     else{
         console.log("Successfully Connected to Mongodb");
 }}) 
+mongoose.set('useCreateIndex', true);
 app.get('/', (req,res) => res.send('hello from the other side'))
 
 
@@ -30,6 +31,6 @@ app.post('/users',(req,res)=>{
     res.send("user created");
 })
 
-app.listen(port || 8080, (req,res)=>
+app.listen(port, (req,res)=>
     console.log("listening on port " + port)
 );
